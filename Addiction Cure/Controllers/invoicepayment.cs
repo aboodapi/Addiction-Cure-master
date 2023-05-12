@@ -70,14 +70,7 @@ namespace Addiction_Cure.Controllers
                 var paymentService = new PaymentIntentService();
                 PaymentIntent paymentIntent = paymentService.Create(paymentOptions);
 
-                var options = new InvoiceCreateOptions
-                {
-                    Customer = customer.Id,
-                };
-                var service = new InvoiceService();
-                service.Create(options);
-
-
+                //Send Invoice
                 var Renderer = new ChromePdfRenderer();
                 var pdf = Renderer.RenderHtmlAsPdf($"<h1>Thank you for your trust in us, and we will be at your best expectation of us, and throughout the period of your treatment, we will follow up your condition in cooperation with the best doctors.</h1>\r\n" +
                     $"\r\n Patient Name:{paymentRequest.Name}\r\n" +
@@ -89,7 +82,7 @@ namespace Addiction_Cure.Controllers
                 string x = "Thank you for your trust in us, and we will be at your best expectation of us, and throughout the period of your treatment, we will follow up your condition in cooperation with the best doctors.";
 
                 MimeMessage message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Addiction Cure", "aboodghs88@gmail.com"));
+                message.From.Add(new MailboxAddress("Addiction Cure", "abedabood009@gmail.com"));
                 message.To.Add(MailboxAddress.Parse(paymentRequest.Email));
                 message.Subject = "Invoice";
                 var builder = new BodyBuilder();
@@ -103,7 +96,7 @@ namespace Addiction_Cure.Controllers
                 try
                 {
                     client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                    client.Authenticate("abedabood4567@gmail.com", "xbnvgxaxsyctuzcx");
+                    client.Authenticate("abedabood009@gmail.com", "xjxdlshrldcnnmkz");
                     client.Send(message);
                 }
                 catch (Exception)

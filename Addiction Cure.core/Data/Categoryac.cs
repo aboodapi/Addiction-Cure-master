@@ -22,5 +22,6 @@ namespace Addiction_Cure.core.Data
         public virtual ICollection<Dictorac> Dictoracs { get; set; }
         public virtual ICollection<Patientac> Patientacs { get; set; }
         public virtual ICollection<Quastionsac> Quastionsacs { get; set; }
+
     }
 }

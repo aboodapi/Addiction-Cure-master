@@ -18,6 +18,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Stripe;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Addiction_Cure
 {
@@ -66,20 +69,39 @@ namespace Addiction_Cure
             services.AddScoped<IBankService, BankService>();
             services.AddScoped<IHomeService, HomeService>();
 
-            services.AddScoped<ICategoryRepository,CategoryRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IQuastionRepository, QuastionRepository>();
             services.AddScoped<IQuastionService, QuastionService>();
-            services.AddScoped<ITestimonialsRepository,TestimonialsRepository>();
+            services.AddScoped<ITestimonialsRepository, TestimonialsRepository>();
             services.AddScoped<ITestimonialsService, TestimonialsService>();
 
-            services.AddScoped<IPaymentRepository,PaymentRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IResultTestRepository, ResultTestRepository>();
             services.AddScoped<IResultTestService, ResultTestService>();
             services.AddControllers();
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme =
+                JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new
+                    SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +111,8 @@ namespace Addiction_Cure
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
